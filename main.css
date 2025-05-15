@@ -1,4 +1,4 @@
-/* main.css - Empire of Likes - Single Page Interactive V4 (Narrative Rework) */
+/* main.css - Empire of Likes - Single Page Interactive V4 (Debug & Style Refinements) */
 
 @import url('https://fonts.googleapis.com/css2?family=Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;700;900&family=Orbitron:wght@500;700&display=swap');
 
@@ -76,7 +76,7 @@ body.no-scroll { /* Prevent body scroll when mobile menu is open */
 
 #particle-canvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; /* Behind header, but above body bg */
+    z-index: 0; 
     opacity: 0.4; pointer-events: none;
 }
 
@@ -116,7 +116,7 @@ body:hover #cursor-glow { opacity: 1; }
 .container {
     width: 90%; max-width: var(--container-width); margin-left: auto; margin-right: auto;
     padding-left: var(--spacing-unit); padding-right: var(--spacing-unit);
-    position: relative; z-index: 2; /* Above particle canvas */
+    position: relative; z-index: 2; 
 }
 
 /* --- Typography --- */
@@ -135,7 +135,7 @@ h1.site-title span:nth-child(1) { color: var(--color-algorithmic-neon-primary); 
 h1.site-title span:nth-child(3) { color: var(--color-algorithmic-neon-secondary); }
 
 h2.section-title { /* Stage Titles */
-    font-size: 3.2rem; text-align: center; margin-bottom: calc(var(--spacing-unit) * 2); /* Reduced bottom margin */
+    font-size: 3.2rem; text-align: center; margin-bottom: calc(var(--spacing-unit) * 2);
     color: var(--color-text-light); position: relative; padding-bottom: var(--spacing-unit);
     text-transform: uppercase; letter-spacing: 2px;
 }
@@ -148,28 +148,22 @@ h2.section-title::after {
 .highlight-text { color: var(--color-algorithmic-neon-primary); text-shadow: 0 0 5px var(--color-algorithmic-neon-primary); }
 .highlight-secondary { color: var(--color-algorithmic-neon-secondary); text-shadow: 0 0 5px var(--color-algorithmic-neon-secondary); }
 
-.stage-intro { /* New style for Stage introduction paragraphs */
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 1.3em;
-    line-height: 1.6;
-    color: var(--color-kardashian-beige); /* Using a distinct color */
-    text-align: center;
-    max-width: 80%;
-    margin: 0 auto calc(var(--spacing-unit) * 3) auto; /* Centered with more bottom margin */
+.stage-intro { 
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 1.3em; line-height: 1.6;
+    color: var(--color-kardashian-beige); 
+    text-align: center; max-width: 80%;
+    margin: 0 auto calc(var(--spacing-unit) * 3) auto; 
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
-
 h3 { /* Part titles */
-    font-size: 2.2rem; /* Slightly larger for "Part" titles */
-    color: var(--color-gold-accent); 
-    margin-top: calc(var(--spacing-unit) * 2); /* Less top margin as .stage-part has its own */
-    margin-bottom: calc(var(--spacing-unit) * 0.75);
-    padding-bottom: calc(var(--spacing-unit) * 0.5);
+    font-size: 2.2rem; color: var(--color-gold-accent); 
+    margin-top: calc(var(--spacing-unit) * 0.5); /* Reduced top margin as .stage-part provides separation */
+    margin-bottom: calc(var(--spacing-unit) * 1); /* Increased bottom margin for spacing to content */
+    padding-bottom: calc(var(--spacing-unit) * 0.25); /* Small padding if needed */
     font-family: var(--font-sans); font-weight: 700; 
     text-shadow: 0 0 8px rgba(255,215,0,0.4);
-    /* Removed bottom border, will be handled by .stage-part::before */
 }
 
 p { margin-bottom: var(--spacing-unit); color: var(--color-text-medium); }
@@ -254,10 +248,16 @@ blockquote.pull-quote-main p { font-size: 1.5em; font-family: var(--font-serif);
     min-height: 100vh; padding: calc(var(--spacing-unit) * 5) 0;
     display: flex; flex-direction: column; justify-content: center;
     position: relative; overflow: hidden;
-    opacity: 0; transition: opacity var(--animation-duration-slow) ease-out;
+    opacity: 0; /* Default state for JS to manage */
+    visibility: hidden; /* Default state for JS to manage */
+    transition: opacity var(--animation-duration-slow) ease-out, visibility 0s linear var(--animation-duration-slow);
     border-bottom: 1px solid var(--color-dark-highlight);
 }
-.content-section.active-section { opacity: 1; }
+.content-section.active-section { 
+    opacity: 1; 
+    visibility: visible;
+    transition: opacity var(--animation-duration-slow) ease-out, visibility 0s linear 0s;
+}
 .content-section:last-of-type { border-bottom: none; }
 
 .section-background-fx {
@@ -276,39 +276,31 @@ blockquote.pull-quote-main p { font-size: 1.5em; font-family: var(--font-serif);
 
 /* --- Stage Part Styling (Replaces .chapter) --- */
 .stage-part {
-    background-color: rgba(28, 28, 58, 0.75); /* Slightly more opaque */
-    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2); /* Adjusted padding */
+    background-color: rgba(28, 28, 58, 0.75); 
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2); 
     border-radius: 12px;
-    margin-top: calc(var(--spacing-unit) * 2.5); /* Added top margin for separation */
+    margin-top: calc(var(--spacing-unit) * 2.5); 
     margin-bottom: calc(var(--spacing-unit) * 2.5);
     border: 1px solid var(--color-dark-highlight);
-    box-shadow: 0 10px 35px rgba(0,0,0,0.6), 0 0 15px var(--color-algorithmic-neon-primary) inset; /* Simplified inset */
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6), 0 0 15px var(--color-algorithmic-neon-primary) inset; 
     position: relative;
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    padding-top: calc(var(--spacing-unit) * 2.5); /* Extra padding for the top border element */
 }
 .stage-part:first-of-type {
-    margin-top: var(--spacing-unit); /* Less top margin for the first part in a stage */
+    margin-top: var(--spacing-unit); 
 }
-/* Decorative top border for Parts */
 .stage-part::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--color-algorithmic-neon-primary), var(--color-algorithmic-neon-secondary), var(--color-gold-accent));
-    border-radius: 12px 12px 0 0; /* Match parent border radius */
-    opacity: 0.7;
-}
-.stage-part h3 { /* Part titles */
-    border-bottom: none; /* Removed individual border, using ::before on .stage-part */
-    padding-bottom: 0;
-    margin-top: calc(var(--spacing-unit) * 0.5); /* Adjusted for new top border */
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 4px; /* Increased height */
+    background: linear-gradient(90deg, var(--color-algorithmic-neon-primary) 0%, var(--color-algorithmic-neon-secondary) 50%, var(--color-gold-accent) 100%);
+    border-radius: 12px 12px 0 0; 
+    opacity: 0.8;
+    box-shadow: 0 0 8px var(--color-algorithmic-neon-primary), 0 0 8px var(--color-algorithmic-neon-secondary);
 }
 
 
-.chapter-image { /* Keeping class name for now if images already use it, but applies to images in .stage-part */
+.chapter-image { 
     display: block; max-width: 100%; height: auto;
     border-radius: 8px; margin: var(--spacing-unit) auto calc(var(--spacing-unit) * 1.5);
     border: 2px solid var(--color-dark-highlight);
@@ -400,7 +392,7 @@ blockquote.pull-quote-main p { font-size: 1.5em; font-family: var(--font-serif);
 }
 .interactive-placeholder h4 { margin-top: 0; color: var(--color-gold-accent); font-size: 1.4rem; font-family: var(--font-sans); font-weight: 700; }
 .interactive-placeholder p, .interactive-placeholder .dev-note { font-size: 0.95rem; color: var(--color-text-medium); }
-.dev-note { font-style: italic; opacity: 0.5; font-size: 0.8em; } /* Made smaller and fainter */
+.dev-note { font-style: italic; opacity: 0.5; font-size: 0.8em; } 
 
 /* Group Chat Interactive */
 .chat-message-container { max-height: 300px; overflow-y: auto; padding-right: 10px; }

@@ -1,6 +1,7 @@
-// main.js - Empire of Likes - Single Page Interactive V2
+// main.js - Empire of Likes - Single Page Interactive V2.1
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Element Selection ---
     const siteLoader = document.getElementById('site-loader');
     const mainContent = document.getElementById('main-content');
     const siteHeader = document.querySelector('.site-header');
@@ -11,29 +12,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const particleCanvas = document.getElementById('particle-canvas');
     const cursorGlow = document.getElementById('cursor-glow');
 
-    // --- Particle Canvas (Basic) ---
+    // --- Particle Canvas ---
     if (particleCanvas) {
         const ctx = particleCanvas.getContext('2d');
         let particles = [];
-        particleCanvas.width = window.innerWidth;
-        particleCanvas.height = window.innerHeight;
+        const particleDensity = Math.floor((window.innerWidth * window.innerHeight) / 20000); // Adjust density based on screen area
+
+        const setupCanvas = () => {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        };
 
         class Particle {
             constructor() {
                 this.x = Math.random() * particleCanvas.width;
                 this.y = Math.random() * particleCanvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.color = Math.random() > 0.5 ? 'rgba(0, 255, 255, 0.5)' : 'rgba(255, 0, 255, 0.5)';
+                this.size = Math.random() * 1.5 + 0.3; // Slightly smaller, more numerous
+                this.speedX = (Math.random() * 0.6 - 0.3) * 0.5; // Slower, more drift-like
+                this.speedY = (Math.random() * 0.6 - 0.3) * 0.5;
+                this.baseColor = Math.random() > 0.5 ? [0, 255, 255] : [255, 0, 255]; // Cyan or Magenta
+                this.opacity = Math.random() * 0.3 + 0.1; // More subtle
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                if (this.size > 0.1) this.size -= 0.01;
+                // Wrap particles around screen edges
+                if (this.x < 0) this.x = particleCanvas.width;
+                if (this.x > particleCanvas.width) this.x = 0;
+                if (this.y < 0) this.y = particleCanvas.height;
+                if (this.y > particleCanvas.height) this.y = 0;
+
+                this.opacity -= 0.001; // Fade out slowly
             }
             draw() {
-                ctx.fillStyle = this.color;
+                ctx.fillStyle = `rgba(${this.baseColor[0]}, ${this.baseColor[1]}, ${this.baseColor[2]}, ${this.opacity})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -42,8 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function initParticles() {
             particles = [];
-            const numberOfParticles = Math.floor(particleCanvas.width / 30); // Adjust density
-            for (let i = 0; i < numberOfParticles; i++) {
+            for (let i = 0; i < particleDensity; i++) {
                 particles.push(new Particle());
             }
         }
@@ -53,52 +64,62 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
-                if (particles[i].size <= 0.1) {
+                if (particles[i].opacity <= 0) { // Replace faded particles
                     particles.splice(i, 1);
                     i--;
-                    particles.push(new Particle()); // Replace dead particle
+                    particles.push(new Particle());
                 }
             }
             requestAnimationFrame(animateParticles);
         }
         
         window.addEventListener('resize', () => {
-            particleCanvas.width = window.innerWidth;
-            particleCanvas.height = window.innerHeight;
-            initParticles();
+            setupCanvas();
+            initParticles(); // Re-initialize on resize for new density
         });
 
+        setupCanvas();
         initParticles();
         animateParticles();
     }
 
     // --- Cursor Glow ---
     if (cursorGlow) {
+        let mouseX = -100, mouseY = -100; // Start off-screen
+        let glowX = -100, glowY = -100;
+        const trailSpeed = 0.15; // How quickly the glow follows the cursor
+
         document.addEventListener('mousemove', (e) => {
-            cursorGlow.style.left = e.clientX + 'px';
-            cursorGlow.style.top = e.clientY + 'px';
-            cursorGlow.style.opacity = '1'; 
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (cursorGlow.style.opacity !== '1') cursorGlow.style.opacity = '1';
         });
+
+        function updateGlowPosition() {
+            glowX += (mouseX - glowX) * trailSpeed;
+            glowY += (mouseY - glowY) * trailSpeed;
+            cursorGlow.style.transform = `translate(${glowX - cursorGlow.offsetWidth / 2}px, ${glowY - cursorGlow.offsetHeight / 2}px)`;
+            requestAnimationFrame(updateGlowPosition);
+        }
+        updateGlowPosition(); // Start the animation loop
+
         document.addEventListener('mousedown', () => cursorGlow.classList.add('active'));
         document.addEventListener('mouseup', () => cursorGlow.classList.remove('active'));
         document.body.addEventListener('mouseleave', () => cursorGlow.style.opacity = '0');
+        document.body.addEventListener('mouseenter', () => { if(mouseX > -100) cursorGlow.style.opacity = '1'}); // Show on re-enter
     }
-
 
     // --- Site Loader ---
     window.addEventListener('load', () => {
-        if (siteLoader) {
-            siteLoader.classList.add('loaded');
-        }
-        mainContent.style.opacity = '1'; 
-        // Trigger animations for the initially visible section after load
-        const initialVisibleSection = document.querySelector('.content-section.active-section') || sections[0];
+        if (siteLoader) siteLoader.classList.add('loaded');
+        if (mainContent) mainContent.style.opacity = '1';
+        
+        const initialVisibleSection = document.querySelector('.content-section.active-section') || (sections.length > 0 ? sections[0] : null);
         if (initialVisibleSection) {
             const elementsToAnimate = initialVisibleSection.querySelectorAll('.animate-on-scroll');
             elementsToAnimate.forEach(el => {
-                // Add a slight delay for elements in the first section
                 const delay = parseInt(el.dataset.delay) || 0;
-                setTimeout(() => el.classList.add('is-visible'), delay + 200); // +200 for loader fade
+                setTimeout(() => el.classList.add('is-visible'), delay + 300); // Increased delay for loader
             });
             animateTextReveal(initialVisibleSection.querySelectorAll('.animate-text-reveal'));
         }
@@ -107,20 +128,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Text Reveal Animation ---
     function animateTextReveal(elements) {
         elements.forEach(el => {
+            if (el.dataset.revealed) return; // Prevent re-animating
+            el.dataset.revealed = true;
+
             const text = el.textContent.trim();
-            const letters = text.split('');
-            el.innerHTML = ''; // Clear original text
-            letters.forEach((letter, index) => {
-                const span = document.createElement('span');
-                span.textContent = letter === ' ' ? '\u00A0' : letter; // Handle spaces
-                span.style.animationDelay = `${index * 0.05}s`; // Stagger animation
-                el.appendChild(span);
+            const words = text.split(/(\s+)/); // Split by words, keeping spaces
+            el.innerHTML = ''; 
+            let charDelay = 0;
+            words.forEach((word) => {
+                if (word.match(/\s+/)) { // If it's a space
+                    const spaceSpan = document.createElement('span');
+                    spaceSpan.innerHTML = '&nbsp;'; // Use &nbsp; for spaces
+                     el.appendChild(spaceSpan);
+                } else {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.style.display = 'inline-block'; // To animate as a block
+                    word.split('').forEach((letter) => {
+                        const span = document.createElement('span');
+                        span.textContent = letter;
+                        span.style.animationDelay = `${charDelay * 0.03}s`; // Stagger letter animation
+                        wordSpan.appendChild(span);
+                        charDelay++;
+                    });
+                    el.appendChild(wordSpan);
+                }
             });
         });
     }
-    // Initial call for static text reveals (like site title)
     animateTextReveal(document.querySelectorAll('.site-title.animate-text-reveal'));
-
 
     // --- Mobile Navigation Toggle ---
     if (menuToggle && navLinksMenu) {
@@ -128,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isExpanded = menuToggle.classList.toggle('open');
             menuToggle.setAttribute('aria-expanded', isExpanded);
             navLinksMenu.classList.toggle('active');
-            document.body.classList.toggle('no-scroll', isExpanded); // Prevent body scroll when menu is open
+            document.body.classList.toggle('no-scroll', isExpanded);
         });
     }
 
@@ -138,14 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
-
             if (targetSection) {
                 const headerOffset = siteHeader.offsetHeight;
                 const elementPosition = targetSection.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                
                 if (navLinksMenu.classList.contains('active')) {
                     menuToggle.classList.remove('open');
                     menuToggle.setAttribute('aria-expanded', 'false');
@@ -157,19 +189,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // --- Header Style Change on Scroll ---
+    let lastScrollTop = 0;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 30) { // Reduced threshold
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll > 50) {
             siteHeader.classList.add('scrolled');
         } else {
             siteHeader.classList.remove('scrolled');
         }
-    });
+        // Optional: Hide header on scroll down, show on scroll up
+        // if (currentScroll > lastScrollTop && currentScroll > siteHeader.offsetHeight){
+        //   siteHeader.style.top = `-${siteHeader.offsetHeight}px`; // Hide
+        // } else {
+        //   siteHeader.style.top = "0"; // Show
+        // }
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; 
+    }, false);
+
 
     // --- Intersection Observer for Section Activation & Animations ---
     const sectionObserverOptions = {
         root: null,
-        rootMargin: `-${siteHeader.offsetHeight + 100}px 0px -40% 0px`, // Adjusted for more centered activation
-        threshold: 0.2 // Needs more of the section in view
+        rootMargin: `-${siteHeader.offsetHeight + 50}px 0px -35% 0px`, // Fine-tuned margin
+        threshold: 0.25 // Section needs to be a bit more in view
     };
 
     const setActiveSectionUI = (sectionId) => {
@@ -186,242 +228,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.isIntersecting) {
                 const sectionId = entry.target.id;
                 setActiveSectionUI(sectionId);
-
-                const elementsToAnimate = entry.target.querySelectorAll('.animate-on-scroll');
+                const elementsToAnimate = entry.target.querySelectorAll('.animate-on-scroll:not(.is-visible)');
                 elementsToAnimate.forEach(el => {
                     const delay = parseInt(el.dataset.delay) || 0;
                     setTimeout(() => el.classList.add('is-visible'), delay);
                 });
-                animateTextReveal(entry.target.querySelectorAll('.animate-text-reveal'));
-                // Play sound (conceptual)
-                // playSound('section-transition'); 
+                animateTextReveal(entry.target.querySelectorAll('.animate-text-reveal:not([data-revealed="true"])'));
+                // playSound('section-reveal');
             } else {
-                // Optionally remove 'is-visible' if you want animations to replay on scroll back
-                // const elementsToReset = entry.target.querySelectorAll('.animate-on-scroll.is-visible');
-                // elementsToReset.forEach(el => el.classList.remove('is-visible'));
+                 // If you want sections to fade out when not primary:
+                 // entry.target.classList.remove('active-section');
             }
         });
     }, sectionObserverOptions);
 
-    sections.forEach(section => {
-        sectionObserver.observe(section);
-    });
+    sections.forEach(section => sectionObserver.observe(section));
     
-    if (window.location.hash) {
-        // Handle initial load with hash, similar to V1 but ensure UI update
-        const initialSectionId = window.location.hash.substring(1);
-        const initialSection = document.getElementById(initialSectionId);
-        if (initialSection) {
-            setTimeout(() => {
-                const headerOffset = siteHeader.offsetHeight;
-                const elementPosition = initialSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'auto' });
-                setActiveSectionUI(initialSectionId); // Ensure nav link and section are active
-                 // Elements will be animated by the loader's 'load' event listener
-            }, 100);
-        }
-    } else {
-        if(sections.length > 0) {
-            setActiveSectionUI(sections[0].id); // Activate first section UI
-            // Animations for first section handled by loader 'load'
-        }
-    }
-
-    // --- Footer: Current Year ---
-    const currentYearSpan = document.getElementById('current-year');
-    if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
-
-    // --- Enhanced Temporal Loom Interaction ---
-    const loomSlider = document.getElementById('loom-slider');
-    const sceneSteelMill = document.getElementById('scene-steel-mill');
-    const sceneTikTokHouse = document.getElementById('scene-tiktok-house');
-    if (loomSlider && sceneSteelMill && sceneTikTokHouse) {
-        sceneSteelMill.style.opacity = '1';
-        sceneTikTokHouse.style.opacity = '0';
-        sceneTikTokHouse.style.display = 'block';
-        loomSlider.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            sceneSteelMill.style.opacity = 1 - val;
-            sceneTikTokHouse.style.opacity = val;
-            // playSound('slider-drag'); // Conceptual
-        });
-    }
-
-    // --- Interactive: Group Chat Animation ---
-    const groupChatInteractive = document.getElementById('group-chat-interactive');
-    if (groupChatInteractive) {
-        const chatContainer = groupChatInteractive.querySelector('.chat-message-container');
-        const messages = [
-            { sender: 'them', text: "S&P 5100 GONE. We're Rwanda with Wi-Fi." },
-            { sender: 'them', text: "Too real. Nero GIF incoming. 🔥" },
-            { sender: 'me', text: "It's not just a day. It's the whole scroll..." },
-            { sender: 'them', text: "Deep. So, what's for dinner? 🍕" }
-        ];
-        let msgIdx = 0;
-        const addMessage = () => {
-            if (msgIdx < messages.length) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('chat-bubble', messages[msgIdx].sender);
-                bubble.textContent = messages[msgIdx].text;
-                chatContainer.appendChild(bubble);
-                // Force reflow for animation
-                void bubble.offsetWidth; 
-                bubble.style.opacity = '1';
-                bubble.style.transform = 'translateY(0) scale(1)';
-                chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll
-                msgIdx++;
-                // playSound('message-pop'); // Conceptual
-                setTimeout(addMessage, 1000 + Math.random() * 800);
-            }
-        };
-        const chatObserver = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && msgIdx === 0) { // Animate only once when visible
-                addMessage();
-                chatObserver.unobserve(entries[0].target);
-            }
-        }, { threshold: 0.6 });
-        chatObserver.observe(groupChatInteractive);
-    }
-    
-    // --- Interactive: Colosseum Filters ---
-    const colosseumInteractive = document.getElementById('colosseum-interactive');
-    if (colosseumInteractive) {
-        const filterButtons = colosseumInteractive.querySelectorAll('.colosseum-controls button');
-        const overlayText = colosseumInteractive.querySelector('#colosseum-overlay-text');
-        const colosseumImage = colosseumInteractive.querySelector('.colosseum-base-image');
-        const filterOverlay = colosseumInteractive.querySelector('#colosseum-filter-overlay');
-
-        const filterData = {
-            "gladiator-brands": { text: "Gladiators now sport logos of olive oil conglomerates and chariot manufacturers on their shields.", effect: "hue-rotate(90deg) saturate(1.5)"},
-            "doordash-dole": { text: "The grain dole is now 'ColosseumDash' – instant papyrus scroll notifications for your next subsidized meal delivery.", effect: "sepia(0.7) contrast(1.2)"},
-            "live-reactions": { text: "Floating '🔥', '💯', and '👎' emojis drift over the arena, reflecting the crowd's sentiment in real-time.", effect: "url(#pixelate)"} // SVG filter needed for pixelate
-        };
-        // Add SVG filter definition for pixelate (conceptual)
-        // <svg><filter id="pixelate"><feFlood flood-color.../></filter></svg>
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const filterType = button.dataset.filter;
-                filterOverlay.classList.remove('active'); // Reset animation
-                void filterOverlay.offsetWidth; // Trigger reflow
-
-                overlayText.textContent = filterData[filterType].text || "Select a filter.";
-                colosseumImage.style.filter = filterData[filterType].effect || 'none';
-                filterOverlay.style.background = filterType === "gladiator-brands" ? 'rgba(0, 255, 0, 0.2)' : 
-                                                 filterType === "doordash-dole" ? 'rgba(255, 165, 0, 0.2)' : 
-                                                 'rgba(255, 255, 0, 0.2)';
-                filterOverlay.classList.add('active');
-                // playSound('filter-apply'); // Conceptual
-            });
-        });
-    }
-
-    // --- Interactive: Infinite Scroll Trap ---
-    const scrollTrap = document.getElementById('infinite-scroll-trap');
-    if (scrollTrap) {
-        const scrollWindow = scrollTrap.querySelector('.scroll-trap-window');
-        const scrollContent = scrollTrap.querySelector('.scroll-trap-content');
-        const breakFreeBtn = scrollTrap.querySelector('#break-free-scroll');
-        let itemCount = 0;
-        let trapped = true;
-
-        const addDummyItem = () => {
-            if (!trapped) return;
-            itemCount++;
-            const item = document.createElement('div');
-            item.classList.add('dummy-feed-item');
-            const itemTypes = ["Viral Dance Clip", "Outrageous Political Take", "Sponsored Gadget Review", "Cute Animal Antics", "Misinformation Post", "Self-Help Guru Quote"];
-            item.textContent = `Item ${itemCount}: ${itemTypes[Math.floor(Math.random() * itemTypes.length)]}`;
-            scrollContent.appendChild(item);
-            // Force reflow for animation
-            void item.offsetWidth;
-            item.style.animationDelay = `${Math.random() * 0.2}s`;
-            scrollWindow.scrollTop = scrollWindow.scrollHeight;
-            if (itemCount > 15 && Math.random() > 0.7) { // Chance to show break free button
-                breakFreeBtn.style.display = 'inline-block';
-            }
-        };
-
-        scrollWindow.addEventListener('scroll', () => {
-            if (trapped && scrollWindow.scrollTop + scrollWindow.clientHeight >= scrollWindow.scrollHeight - 20) {
-                for(let i=0; i<3; i++) addDummyItem(); // Add more items when near bottom
-            }
-        });
-        breakFreeBtn.addEventListener('click', () => {
-            trapped = false;
-            scrollContent.innerHTML += '<p class="dev-note" style="color:var(--color-gold-accent); text-align:center; padding:1rem;">You broke free from the scroll!</p>';
-            breakFreeBtn.style.display = 'none';
-            // playSound('success-chime'); // Conceptual
-        });
-        
-        const scrollTrapObserver = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && itemCount === 0) { // Start once visible
-                for(let i=0; i<5; i++) addDummyItem();
-            }
-        }, { threshold: 0.5 });
-        scrollTrapObserver.observe(scrollTrap);
-    }
-    
-    // --- Interactive: Rosie Morph ---
-    const rosieSlider = document.getElementById('rosieMorphSlider');
-    const rosieImg2 = document.getElementById('rosie-img2');
-    if (rosieSlider && rosieImg2) {
-        rosieSlider.addEventListener('input', (e) => {
-            rosieImg2.style.opacity = e.target.value / 100;
-        });
-    }
-
-
-    // --- Reader Poll: TikTok Regulation ---
-    const tiktokPollForm = document.getElementById('tiktok-poll-form');
-    const tiktokPollResults = document.getElementById('tiktok-poll-results');
-    if (tiktokPollForm && tiktokPollResults) {
-        tiktokPollForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const selectedOption = tiktokPollForm.querySelector('input[name="tiktok-poll"]:checked');
-            if (selectedOption) {
-                tiktokPollResults.innerHTML = `Thanks for voting '<strong>${selectedOption.value}</strong>'! <br><small>(In a real app, results would be shown here.)</small>`;
-                tiktokPollResults.style.display = 'block';
-                tiktokPollForm.style.display = 'none';
-                // playSound('poll-vote'); // Conceptual
-            } else {
-                alert("Please select an option.");
-            }
-        });
-    }
-
-    // --- Interactive: Constellation of Hope ---
-    const hopeInput = document.getElementById('hope-input');
-    const submitHopeBtn = document.getElementById('submit-hope-btn');
-    const hopeDisplayArea = document.getElementById('hope-display-area');
-    if (hopeInput && submitHopeBtn && hopeDisplayArea) {
-        submitHopeBtn.addEventListener('click', () => {
-            const thought = hopeInput.value.trim();
-            if (thought) {
-                const star = document.createElement('span');
-                star.classList.add('hope-star');
-                star.textContent = thought;
-                // Random positioning for a 'constellation' feel
-                star.style.position = 'absolute'; // Ensure parent is relative
-                star.style.left = `${Math.random() * 80 + 10}%`; // % of parent width
-                star.style.top = `${Math.random() * 70 + 15}%`; // % of parent height
-                star.style.transform = `scale(${0.8 + Math.random() * 0.4})`; // Vary size
-                hopeDisplayArea.appendChild(star);
-                hopeInput.value = '';
-                // playSound('star-appear'); // Conceptual
-            }
-        });
-    }
-
-    console.log("Empire of Likes - Single Page Interactive V2 JS Loaded");
-});
-
-// Conceptual sound function
-// function playSound(soundId) {
-//     console.log(`Playing sound: ${soundId}`);
-//     // In a real app:
-//     // const audio = new Audio(`sounds/${soundId}.mp3`);
-//     // audio.play();
-// }
-
+    const handleInitialLoa

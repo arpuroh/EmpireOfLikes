@@ -223,14 +223,19 @@ blockquote.pull-quote-main p { font-size: 1.5em; font-family: var(--font-serif);
 
 .section-background-fx {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    opacity: 0.15; /* Default opacity for these effects, can be overridden */
-    pointer-events: none;
+    opacity: 0.15; pointer-events: none;
+    /* MODIFIED: Changed from placeholder URL to local path */
+    background-image: url('img/global_parallax_texture.jpg'); 
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 /* Specific background styles (can be animated in JS or be static CSS) */
-[data-bg-type="prologue-stars"] { background: radial-gradient(ellipse at bottom, var(--color-dark-mid-tone) 0%, transparent 70%); }
-[data-bg-type="digital-rain"] { /* Placeholder for JS animation */ }
-[data-bg-type="network-plexus"] { /* Placeholder for JS animation */ }
-[data-bg-type="hope-stars"] { background: radial-gradient(ellipse at top, var(--color-dark-highlight) 0%, transparent 70%); }
+[data-bg-type="prologue-stars"] { background: radial-gradient(ellipse at bottom, var(--color-dark-mid-tone) 0%, transparent 70%), url('img/global_parallax_texture.jpg') center/cover fixed no-repeat; }
+[data-bg-type="digital-rain"] { /* Placeholder for JS animation, still uses global parallax */ }
+[data-bg-type="network-plexus"] { /* Placeholder for JS animation, still uses global parallax */ }
+[data-bg-type="hope-stars"] { background: radial-gradient(ellipse at top, var(--color-dark-highlight) 0%, transparent 70%), url('img/global_parallax_texture.jpg') center/cover fixed no-repeat; }
 
 
 /* --- Chapter Styling --- */

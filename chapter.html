@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Page - Empire of Likes</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title"><a href="index.html">Empire of Likes</a></h1>
+            <nav class="main-nav">
+                <button id="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+                <ul id="nav-links">
+                    <li><a href="index.html#prologue">Prologue</a></li>
+                    <li><a href="act.html?act=1">Act I</a></li>
+                    <li><a href="act.html?act=2">Act II</a></li>
+                    <li><a href="act.html?act=7">Epilogue</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="chapter-content">
+        <article class="container">
+            <h2 id="chapter-title">Chapter [Number]: [Chapter Title Placeholder]</h2>
+            <p class="parent-act-link"><a href="act.html?act=1" id="back-to-act-link">Back to Act [Number]</a></p>
+            
+            <div id="chapter-body">
+                <p><em>The S&P broke support at 5100 while Kunal broke the last taboo of optimism. He called America Rwanda with Wi-Fi, and the insult stung not because it was cruel but because it felt prematurely accurate.</em> (Sample paragraph)</p>
+                
+                <p>This chapter opens with the famous iMessage thread (re-written in narrative, not chat bubbles). It's set in a Brooklyn apartment, with SPX candles bleeding, and a Nero GIF making an appearance. We are introduced to Kunal, Mohsin, and the Narrator.</p>
+
+                <div class="interactive-placeholder" id="living-dialogue-interactive">
+                    <h4>Interactive Element: Living Dialogue</h4>
+                    <p>(This section would feature the dynamic iMessage thread simulation. Key phrases would animate, and the conversation would unfold as the user scrolls or interacts.)</p>
+                    <p><em>Development Note: This requires JavaScript to animate text appearance and simulate a chat interface.</em></p>
+                </div>
+
+                <p>The chapter's end beat: The Narrator realises Rome didn’t fall in a day; it fell in a scroll.</p>
+
+                <aside class="infobox">
+                    <h4><span class="tone-tag">[INFOBOX]</span> Key Theme: The Scroll</h4>
+                    <p>The concept of the "scroll" as a metaphor for societal decline through distraction is introduced here.</p>
+                </aside>
+
+                <figure class="pull-quote">
+                    <blockquote>
+                        <p>"Rome didn’t fall in a day; it fell in a scroll."</p>
+                    </blockquote>
+                </figure>
+
+                <p>One character shares a <span class="meme-note" data-meme-url="https://placehold.co/200x150/cccccc/000000?text=Nero+GIF">Nero GIF</span> (hover for meme - functionality to be built).</p>
+                
+                <div class="interactive-placeholder">
+                     <h4>Data Visualization: Attention Metrics</h4>
+                     <p>(A D3.js chart showing attention metrics could be embedded here, as suggested in the plan.)</p>
+                     <p><em>Development Note: Requires D3.js library and data.</em></p>
+                </div>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="#" id="prev-chapter-link" class="btn btn-secondary">&laquo; Previous Chapter</a>
+                <a href="#" id="next-chapter-link" class="btn btn-primary">Next Chapter &raquo;</a>
+            </nav>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Empire of Likes. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Basic script to simulate dynamic content for Chapter pages
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actId = urlParams.get('act') || '1';
+            const chapterId = urlParams.get('chapter') || '1';
+
+            // In a real app, you'd fetch this from a CMS or JSON
+            const chapterDetails = {
+                '1_1': { // Act 1, Chapter 1
+                    act: '1',
+                    actTitle: 'Act I: Bread & Circuses 2.0',
+                    title: "Chapter 1: Group-Chat Apocalypse",
+                    // Full content would be loaded here. For this template, we use the placeholder HTML.
+                    prevChapterLink: null, // Link to Act 1 intro or Prologue
+                    nextChapterLink: "chapter.html?act=1&chapter=2",
+                    backToActLinkHref: "act.html?act=1"
+                },
+                '1_2': { // Act 1, Chapter 2
+                    act: '1',
+                    actTitle: 'Act I: Bread & Circuses 2.0',
+                    title: "Chapter 2: Snapchatting the Colosseum",
+                    // HTML content for this chapter
+                    htmlContent: `
+                        <p>This chapter time-warps to A.D. 80.</p>
+                        <p>Key concepts: Gladiator “brand sponsorships” (olive-oil company logos on shields), Grain dole vs. DoorDash.</p>
+                        
+                        <div class="interactive-placeholder" id="spectacle-filter-interactive">
+                            <h4>Interactive Element: The "Spectacle Filter"</h4>
+                            <p>(Users would interact with an image of the Colosseum, applying conceptual 'Snapchat filters' to see modern parallels.)</p>
+                            <p><em>Development Note: Requires JavaScript for image manipulation/overlay effects.</em></p>
+                        </div>
+
+                        <p>Includes a “Spectacle as sedative” section with Princeton outrage-algorithm study.</p>
+                        <p>Ends with cliff-hanger: if dopamine is currency, who controls the mint?</p>
+                    `,
+                    prevChapterLink: "chapter.html?act=1&chapter=1",
+                    nextChapterLink: "act.html?act=2", // Link to Act 2 intro
+                    backToActLinkHref: "act.html?act=1"
+                },
+                // Add more chapters...
+                 '7_12': { // Act 7, Chapter 12
+                    act: '7',
+                    actTitle: 'Act VII: Epilogue',
+                    title: "Chapter 12: Screens at the End of the World",
+                    htmlContent: \`
+                        <p>Callback to group chat; same friends, two years later, maybe older, maybe wiser.</p>
+                        <p>Hopeful coda: attention can be re-directed—book lists, citizen assemblies, local maker-spaces.</p>
+                        <blockquote>
+                            <p>“Rome gave us law; Hollywood gave us hero shots; maybe our kids will give us something better—if we can teach them to look up from the screen long enough to build it.”</p>
+                        </blockquote>
+                        <div class="interactive-placeholder" id="constellation-of-hope-interactive">
+                            <h4>Interactive Element: Constellation of Hope</h4>
+                            <p>(Users could anonymously submit short texts that appear as stars in a night sky.)</p>
+                            <p><em>Development Note: Requires backend integration for submissions and JavaScript/Canvas or WebGL for visualization.</em></p>
+                        </div>
+                    \`,
+                    prevChapterLink: "act.html?act=6", // Assuming Act 6 has chapters, this would be the last chapter of Act 6
+                    nextChapterLink: "index.html", // Back to home/end
+                    backToActLinkHref: "act.html?act=7"
+                }
+            };
+
+            const currentChapterKey = actId + "_" + chapterId;
+            const chapterData = chapterDetails[currentChapterKey];
+
+            const chapterTitleEl = document.getElementById('chapter-title');
+            const chapterBodyEl = document.getElementById('chapter-body');
+            const backToActLink = document.getElementById('back-to-act-link');
+            const prevChapterButton = document.getElementById('prev-chapter-link');
+            const nextChapterButton = document.getElementById('next-chapter-link');
+
+
+            if (chapterData) {
+                chapterTitleEl.textContent = chapterData.title;
+                backToActLink.href = chapterData.backToActLinkHref;
+                backToActLink.textContent = \`Back to \${chapterData.actTitle}\`;
+
+                if (chapterData.htmlContent) {
+                    chapterBodyEl.innerHTML = chapterData.htmlContent;
+                } else if (chapterId === '1' && actId === '1') {
+                    // Default content for Act 1 Chapter 1 is already in HTML, so no need to replace
+                } else {
+                     chapterBodyEl.innerHTML = "<p>Content for this chapter will be loaded here.</p>";
+                }
+
+
+                if (chapterData.prevChapterLink) {
+                    prevChapterButton.href = chapterData.prevChapterLink;
+                    prevChapterButton.style.display = 'inline-block';
+                } else {
+                    prevChapterButton.style.display = 'none';
+                }
+
+                if (chapterData.nextChapterLink) {
+                    nextChapterButton.href = chapterData.nextChapterLink;
+                    nextChapterButton.style.display = 'inline-block';
+                } else {
+                    nextChapterButton.style.display = 'none';
+                }
+
+            } else {
+                chapterTitleEl.textContent = "Chapter Not Found";
+                chapterBodyEl.innerHTML = "<p>The requested chapter could not be found. Please check the URL or navigate using the main menu.</p>";
+                prevChapterButton.style.display = 'none';
+                nextChapterButton.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

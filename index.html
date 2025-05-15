@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empire of Likes - Prologue</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title"><a href="index.html">Empire of Likes</a></h1>
+            <nav class="main-nav">
+                <button id="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+                <ul id="nav-links">
+                    <li><a href="index.html#prologue">Prologue</a></li>
+                    <li><a href="act.html?act=1">Act I</a></li>
+                    <li><a href="act.html?act=2">Act II</a></li>
+                    <li><a href="act.html?act=3">Act III</a></li>
+                    <li><a href="act.html?act=4">Act IV</a></li>
+                    <li><a href="act.html?act=5">Act V</a></li>
+                    <li><a href="act.html?act=6">Act VI</a></li>
+                    <li><a href="act.html?act=7">Epilogue</a></li>
+                    </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="prologue" class="prologue-hero">
+            <div class="container">
+                <h2>Prologue: Twilight of the Producers</h2>
+                <div class="temporal-loom-container">
+                    <div class="temporal-scene" id="scene-steel-mill">
+                        <img src="https://placehold.co/800x400/333333/FFFFFF?text=1965+Bethlehem+Steel+Mill" alt="1965 Bethlehem Steel Mill - Placeholder">
+                        <p>1965: Sparks, rivets, and shift whistles. The might of industry.</p>
+                    </div>
+                    <div class="temporal-scene" id="scene-tiktok-house" style="display: none;">
+                        <img src="https://placehold.co/800x400/E07A5F/FFFFFF?text=2025+TikTok+House" alt="2025 TikTok House - Placeholder">
+                        <p>2025: Ring lights, brand deals, and collab dances. The allure of attention.</p>
+                    </div>
+                    <div class="temporal-loom-controls">
+                        <label for="loom-slider">Drag to shift perspective:</label>
+                        <input type="range" id="loom-slider" min="0" max="1" step="0.01" value="0">
+                    </div>
+                </div>
+
+                <div class="prologue-content">
+                    <p class="thesis">
+                        <em>When a civilisation’s prime export becomes <strong>attention</strong>, decadence ceases to be a moral failing and becomes the P&L strategy.</em>
+                    </p>
+                    <p>Factories once defined national pride; now “creator houses” do. Data nugget: manufacturing employment ↓ 29% since 1990; influencer economy valued at $250 bn.</p>
+                    <blockquote>
+                        <p>“Rome paid its soldiers in silver; we pay ours in followers.”</p>
+                    </blockquote>
+                    <a href="act.html?act=1" class="btn btn-primary">Begin the Journey (Act I)</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="manifesto" class="content-section">
+            <div class="container">
+                <h3>Project Manifesto</h3>
+                <p>This interactive experience aims to explore the themes presented in "Empire of Likes," inviting you to engage with the narrative in a new and dynamic way. We delve into how attention has reshaped our society, drawing parallels with historical empires and prompting reflection on our current trajectory.</p>
+                <p><em>(More content about the project's intent can be added here.)</em></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Empire of Likes. All Rights Reserved.</p>
+            <p><a href="#about">About</a> | <a href="#credits">Credits</a> | <a href="#privacy">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

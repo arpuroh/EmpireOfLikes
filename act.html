@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act Page - Empire of Likes</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title"><a href="index.html">Empire of Likes</a></h1>
+            <nav class="main-nav">
+                <button id="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+                <ul id="nav-links">
+                    <li><a href="index.html#prologue">Prologue</a></li>
+                    <li><a href="act.html?act=1">Act I</a></li>
+                    <li><a href="act.html?act=2">Act II</a></li>
+                    <li><a href="act.html?act=3">Act III</a></li>
+                    <li><a href="act.html?act=4">Act IV</a></li>
+                    <li><a href="act.html?act=5">Act V</a></li>
+                    <li><a href="act.html?act=6">Act VI</a></li>
+                    <li><a href="act.html?act=7">Epilogue</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="act-intro content-section">
+            <div class="container">
+                <h2 id="act-title">Act [Number]: [Act Title Placeholder]</h2>
+                <p id="act-synopsis" class="lead"><em>[Act synopsis placeholder. This text would summarize the main theme of the current Act.]</em></p>
+                </div>
+        </section>
+
+        <section class="chapters-overview">
+            <div class="container">
+                <h3>Chapters in this Act</h3>
+                <div class="chapter-grid" id="chapter-grid-container">
+                    <div class="chapter-card">
+                        <h4>Chapter 1: Group-Chat Apocalypse</h4>
+                        <p>Opens with the famous iMessage thread... Narrator realises Rome didn’t fall in a day; it fell in a scroll.</p>
+                        <a href="chapter.html?act=1&chapter=1" class="btn">Read Chapter 1</a>
+                    </div>
+                    <div class="chapter-card">
+                        <h4>Chapter 2: Snapchatting the Colosseum</h4>
+                        <p>Time-warp to A.D. 80: Gladiator “brand sponsorships”... if dopamine is currency, who controls the mint?</p>
+                        <a href="chapter.html?act=1&chapter=2" class="btn">Read Chapter 2</a>
+                    </div>
+                    </div>
+            </div>
+        </section>
+         <nav class="act-navigation container">
+            <a href="#" id="prev-act-link" class="btn btn-secondary">&laquo; Previous Act</a>
+            <a href="#" id="next-act-link" class="btn btn-primary">Next Act &raquo;</a>
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Empire of Likes. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Basic script to simulate dynamic content for Act pages
+        // In a real application, this data would come from a CMS or JSON files.
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actId = urlParams.get('act') || '1'; // Default to Act 1
+
+            const actData = {
+                '1': { 
+                    title: "Act I: Bread & Circuses 2.0", 
+                    synopsis: "This Act explores the modern parallels to Roman bread and circuses, from group-chat meltdowns to the gamification of outrage.",
+                    chapters: [
+                        { id: 1, title: "Group-Chat Apocalypse", summary: "Opens with the famous iMessage thread... Narrator realises Rome didn’t fall in a day; it fell in a scroll.", link: "chapter.html?act=1&chapter=1" },
+                        { id: 2, title: "Snapchatting the Colosseum", summary: "Time-warp to A.D. 80: Gladiator “brand sponsorships”... if dopamine is currency, who controls the mint?", link: "chapter.html?act=1&chapter=2" }
+                    ],
+                    prevActLink: "index.html#prologue", // Link to Prologue
+                    nextActLink: "act.html?act=2"
+                },
+                '2': { 
+                    title: "Act II: The Attention Economy", 
+                    synopsis: "Delving into the mechanics of the attention economy, from the invention of the infinite scroll to the rise of influencer culture.",
+                    chapters: [
+                        { id: 3, title: "Invention of the Infinite Scroll", summary: "Origin story: Aza Raskin, 2006 UI patent...", link: "chapter.html?act=2&chapter=3" },
+                        { id: 4, title: "When Talent Quit, Influence Won", summary: "Chart: Google Trends “celebrity scandal” vs. “celebrity skill” searches...", link: "chapter.html?act=2&chapter=4" }
+                    ],
+                    prevActLink: "act.html?act=1",
+                    nextActLink: "act.html?act=3"
+                },
+                // Add data for other acts...
+                 '7': {
+                    title: "Act VII: Epilogue",
+                    synopsis: "Reflecting on the journey and looking towards potential futures.",
+                     chapters: [
+                        { id: 12, title: "Screens at the End of the World", summary: "Callback to group chat; same friends, two years later... Hopeful coda.", link: "chapter.html?act=7&chapter=12" }
+                    ],
+                    prevActLink: "act.html?act=6",
+                    nextActLink: "index.html" // Or a thank you page
+                }
+            };
+
+            const currentAct = actData[actId];
+            if (currentAct) {
+                document.getElementById('act-title').textContent = currentAct.title;
+                document.getElementById('act-synopsis').textContent = currentAct.synopsis;
+                
+                const chapterGrid = document.getElementById('chapter-grid-container');
+                chapterGrid.innerHTML = ''; // Clear existing placeholders
+                currentAct.chapters.forEach(chap => {
+                    const card = document.createElement('div');
+                    card.className = 'chapter-card';
+                    card.innerHTML = `
+                        <h4>Chapter ${chap.id}: ${chap.title}</h4>
+                        <p>${chap.summary}</p>
+                        <a href="${chap.link}" class="btn">Read Chapter ${chap.id}</a>
+                    `;
+                    chapterGrid.appendChild(card);
+                });
+
+                const prevActButton = document.getElementById('prev-act-link');
+                const nextActButton = document.getElementById('next-act-link');
+
+                if (currentAct.prevActLink) {
+                    prevActButton.href = currentAct.prevActLink;
+                    prevActButton.style.display = 'inline-block';
+                } else {
+                    prevActButton.style.display = 'none';
+                }
+
+                if (currentAct.nextActLink) {
+                    nextActButton.href = currentAct.nextActLink;
+                    nextActButton.style.display = 'inline-block';
+                } else {
+                    nextActButton.style.display = 'none';
+                }
+
+            } else {
+                document.getElementById('act-title').textContent = "Act Not Found";
+                document.getElementById('chapter-grid-container').innerHTML = "<p>The requested Act could not be found. Please check the URL or navigate using the main menu.</p>";
+            }
+        });
+    </script>
+</body>
+</html>
